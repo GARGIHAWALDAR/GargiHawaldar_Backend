@@ -1,0 +1,135 @@
+# Instructions to Set Up and Run the Tic-Tac-Toe Project in Postman
+
+## Prerequisites
+1. **Node.js Installed**: Ensure that Node.js is installed on your system.
+2. **Postman Installed**: Download and install Postman for API testing.
+3. **Project Setup**:
+   - Clone the project repository.
+   - Install dependencies by running:
+     ```bash
+     npm install
+     ```
+   - Start the server:
+     ```bash
+     node server.js
+     ```
+   - Ensure the server is running on `http://localhost:5000`.
+
+---
+
+## Step-by-Step Instructions to Test APIs in Postman
+
+### **1. Import a Collection (Optional)**
+   If a Postman collection file (JSON format) is available in the project repository:
+   - Open Postman.
+   - Click on **Import**.
+   - Select the collection file to import predefined requests.
+
+### **2. Test APIs Manually**
+
+#### **2.1 User Registration**
+- **Endpoint**: `POST /api/auth/register`
+- **Request Body** (JSON):
+  ```json
+  {
+      "username": "testuser",
+      "password": "password123"
+  }
+  ```
+- **Expected Response**:
+  ```json
+  {
+      "message": "User registered successfully"
+  }
+  ```
+
+#### **2.2 User Login**
+- **Endpoint**: `POST /api/auth/login`
+- **Request Body** (JSON):
+  ```json
+  {
+      "username": "testuser",
+      "password": "password123"
+  }
+  ```
+- **Expected Response**:
+  ```json
+  {
+      "token": "<JWT_TOKEN>"
+  }
+  ```
+- **Save the Token**: Copy the value of `token` from the response.
+
+#### **2.3 Start a Game**
+- **Endpoint**: `POST /api/game/start`
+- **Headers**:
+  - Key: `Authorization`
+  - Value: `Bearer <JWT_TOKEN>`
+- **Request Body** (JSON):
+  ```json
+  {
+      "opponentUsername": "opponentuser"
+  }
+  ```
+- **Expected Response**:
+  ```json
+  {
+      "gameId": "<GAME_ID>",
+      "message": "Game started successfully"
+  }
+  ```
+
+#### **2.4 Make a Move**
+- **Endpoint**: `POST /api/game/:gameId/move`
+  Replace `:gameId` with the actual `gameId` from the previous response.
+- **Headers**:
+  - Key: `Authorization`
+  - Value: `Bearer <JWT_TOKEN>`
+- **Request Body** (JSON):
+  ```json
+  {
+      "position": 4
+  }
+  ```
+- **Expected Response**:
+  ```json
+  {
+      "message": "Move recorded",
+      "board": ["", "", "", "", "X", "", "", "", ""]
+  }
+  ```
+
+#### **2.5 Fetch Match History**
+- **Endpoint**: `GET /api/game/history`
+- **Headers**:
+  - Key: `Authorization`
+  - Value: `Bearer <JWT_TOKEN>`
+- **Expected Response**:
+  ```json
+  [
+      {
+          "gameId": "<GAME_ID>",
+          "opponent": "opponentuser",
+          "result": "win",
+          "moves": [
+              {"position": 4, "player": "testuser"},
+              {"position": 0, "player": "opponentuser"}
+          ]
+      }
+  ]
+  ```
+
+---
+
+## **Notes**
+1. Ensure that the `Authorization` header is included with the correct `Bearer <JWT_TOKEN>` value for all authenticated requests.
+2. Use the correct `gameId` when making game-specific requests like moves.
+3. Follow the standard JSON structure as shown in the examples to avoid validation errors.
+4. Monitor server logs for additional debugging information.
+
+---
+
+### **For Additional Testing**
+- Test edge cases such as invalid tokens, out-of-turn moves, or invalid positions.
+- Try different user accounts to simulate multi-user scenarios.
+
